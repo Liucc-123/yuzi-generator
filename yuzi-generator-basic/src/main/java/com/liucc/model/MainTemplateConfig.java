@@ -16,7 +16,7 @@ public class MainTemplateConfig {
     /**
      * 是否生成循环
      */
-    private boolean isLoop;
+    private boolean loop;
 
     /**
      * 输出信息
