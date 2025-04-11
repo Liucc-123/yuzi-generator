@@ -1,11 +1,11 @@
-package com.liucc.marker.cli;
+package ${basePackage}.cli;
 
-import com.liucc.marker.cli.command.ConfigCommand;
-import com.liucc.marker.cli.command.GenerateCommand;
-import com.liucc.marker.cli.command.ListCommand;
+import ${basePackage}.cli.command.ConfigCommand;
+import ${basePackage}.cli.command.GenerateCommand;
+import ${basePackage}.cli.command.ListCommand;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "yuzi", mixinStandardHelpOptions = true)
+@CommandLine.Command(name = "${name}", mixinStandardHelpOptions = true)
 public class CommandExecutor implements Runnable{
     private final CommandLine commandLine;
     {
