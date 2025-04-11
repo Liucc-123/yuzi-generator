@@ -6,7 +6,7 @@
   "author": "liucc",
   "createTime": "2025-04-10",
   "fileConfig": {
-    "inputRootPath": "/Users/liuchuangchuang/code/yuzi-generator/yuzi-generator-demo-projects/acm-template-pro",
+    "inputRootPath": "D:/code/yuzi-generator/yuzi-generator-demo-projects/acm-template-pro",
     "outputRootPath": "generated",
     "type": "dir",
     "files": [

@@ -1,4 +1,4 @@
-package ${basePackage}.marker.model;
+package ${basePackage}.model;
 
 import lombok.Data;
 
