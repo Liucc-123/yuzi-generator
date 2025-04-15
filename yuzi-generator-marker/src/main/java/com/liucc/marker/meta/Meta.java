@@ -18,14 +18,23 @@ public class Meta {
     private String version;
     private String author;
     private String createTime;
+    private Git git;
     private FileConfigDTO fileConfig;
     private ModelConfigDTO modelConfig;
+
+    @NoArgsConstructor
+    @Data
+    public static class Git{
+        private Boolean enable;
+        private String gitignore;
+    }
 
     @NoArgsConstructor
     @Data
     public static class FileConfigDTO {
         private String inputRootPath;
         private String outputRootPath;
+        private String sourceRootPath; // 源模板项目路径
         private String type;
         private List<FileInfo> files;
 

@@ -5,9 +5,14 @@
   "version": "1.0",
   "author": "liucc",
   "createTime": "2025-04-10",
+  "git": {
+    "enable": true,
+    "gitignore": "/Users/liuchuangchuang/code/yuzi-generator/.gitignore"
+  },
   "fileConfig": {
-    "inputRootPath": "D:/code/yuzi-generator/yuzi-generator-demo-projects/acm-template-pro",
+    "inputRootPath": ".source/acm-template-pro",
     "outputRootPath": "generated",
+    "sourceRootPath": "/Users/liuchuangchuang/code/yuzi-generator/yuzi-generator-demo-projects/acm-template-pro",
     "type": "dir",
     "files": [
       {

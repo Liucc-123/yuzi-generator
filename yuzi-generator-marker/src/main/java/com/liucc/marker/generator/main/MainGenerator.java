@@ -2,6 +2,7 @@ package com.liucc.marker.generator.main;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
+import com.liucc.marker.generator.GitGenerator;
 import com.liucc.marker.generator.JarGenerator;
 import com.liucc.marker.generator.ScriptGenerator;
 import com.liucc.marker.generator.file.DynamicFileGenerator;
@@ -23,6 +24,10 @@ public class MainGenerator {
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
         }
+        // 将模板项目 copy 到.source目录下
+        String sourcePath = meta.getFileConfig().getSourceRootPath();
+        String sourceCopyDestPath = outputPath + File.separator + ".source";
+        FileUtil.copy(sourcePath, sourceCopyDestPath, true);
         // 获取 resources 目录
         ClassPathResource classPathResource = new ClassPathResource("");
         String inputResourcePath = classPathResource.getAbsolutePath();
@@ -78,6 +83,14 @@ public class MainGenerator {
         inputFilePath = inputResourcePath + File.separator + "templates/pom.xml.ftl";
         outputFilePath = outputPath + File.separator + "pom.xml";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+        // README.md
+        inputFilePath = inputResourcePath + File.separator + "templates/README.md.ftl";
+        outputFilePath = outputPath + File.separator + "README.md";
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+        // 使用 git 托管项目
+        if (meta.getGit().getEnable()){
+            GitGenerator.doGenerator(outputPath, meta.getGit().getGitignore());
+        }
         // 构建jar包
         JarGenerator.doGenerate(outputPath);
         // 封装脚本
@@ -85,5 +98,19 @@ public class MainGenerator {
         String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
         String jarPath = "target/" + jarName;
         ScriptGenerator.doGenerate(shellOutputFilePath, jarPath);
+
+        // 生成精简版的代码生成器（仅保留 原始模板文件、jar 包、脚本文件）
+        // - 原始模板文件
+        FileUtil.copy(sourceCopyDestPath, outputPath + "-dist", true);
+        // - jar 包
+        String jarCopySourcePath = outputPath + File.separator + jarPath;
+        String jarCopyDestPath = outputPath + "-dist" + File.separator + jarPath;
+        FileUtil.copy(jarCopySourcePath, jarCopyDestPath, true);
+        // - 脚本文件
+        String shellCopySourcePath = outputPath + File.separator + "generator";
+        String shellCopyDestPath = outputPath + "-dist";
+        FileUtil.copy(shellCopySourcePath, shellCopyDestPath, true);
+        shellCopySourcePath = outputPath + File.separator + "generator.bat";
+        FileUtil.copy(shellCopySourcePath, shellCopyDestPath, true);
     }
 }
