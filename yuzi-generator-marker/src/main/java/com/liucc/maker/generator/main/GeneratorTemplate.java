@@ -1,33 +1,87 @@
-package com.liucc.marker.generator.main;
+package com.liucc.maker.generator.main;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
-import com.liucc.marker.generator.GitGenerator;
-import com.liucc.marker.generator.JarGenerator;
-import com.liucc.marker.generator.ScriptGenerator;
-import com.liucc.marker.generator.file.DynamicFileGenerator;
-import com.liucc.marker.meta.Meta;
-import com.liucc.marker.meta.MetaManager;
+import com.liucc.maker.generator.GitGenerator;
+import com.liucc.maker.generator.JarGenerator;
+import com.liucc.maker.generator.ScriptGenerator;
+import com.liucc.maker.generator.file.DynamicFileGenerator;
+import com.liucc.maker.meta.Meta;
+import com.liucc.maker.meta.MetaManager;
 import freemarker.template.TemplateException;
 
 import java.io.File;
 import java.io.IOException;
 
-public class MainGenerator {
-    public static void main(String[] args) throws TemplateException, IOException, InterruptedException {
+public abstract class GeneratorTemplate  {
+    public void doGenerate() throws TemplateException, IOException, InterruptedException  {
         Meta meta = MetaManager.getMetaObject();
-        // System.out.println(meta);
-
         String projectPath = System.getProperty("user.dir");
         String outputPath = projectPath + File.separator + "generated" + File.separator +meta.getName();// 生成目标项目的路径
         // 路径不存在，则创建
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
         }
-        // 将模板项目 copy 到.source目录下
-        String sourcePath = meta.getFileConfig().getSourceRootPath();
-        String sourceCopyDestPath = outputPath + File.separator + ".source";
-        FileUtil.copy(sourcePath, sourceCopyDestPath, true);
+        // 1、拷贝原始模板文件
+        String sourceCopyDestPath = copySourceFiles(meta, outputPath);
+        // 2、生成代码文件
+        generateCode(meta, outputPath);
+        // 3、使用git托管项目
+        gitProject(meta.getGit(), outputPath);
+        // 4、构建jar包
+        String jarPath = buildJar(outputPath, meta);
+        // 5、构建shell脚本
+        buildShell(outputPath, jarPath);
+        // 6、生成精简版代码生成器
+        generateDist(sourceCopyDestPath, outputPath, jarPath);
+    }
+
+    protected void generateDist(String sourceCopyDestPath, String outputPath, String jarPath) {
+        // 生成精简版的代码生成器（仅保留 原始模板文件、jar 包、脚本文件）
+        // - 原始模板文件
+        FileUtil.copy(sourceCopyDestPath, outputPath + "-dist", true);
+        // - jar 包
+        String jarCopySourcePath = outputPath + File.separator + jarPath;
+        String jarCopyDestPath = outputPath + "-dist" + File.separator + jarPath;
+        FileUtil.copy(jarCopySourcePath, jarCopyDestPath, true);
+        // - 脚本文件
+        String shellCopySourcePath = outputPath + File.separator + "generator";
+        String shellCopyDestPath = outputPath + "-dist";
+        FileUtil.copy(shellCopySourcePath, shellCopyDestPath, true);
+        shellCopySourcePath = outputPath + File.separator + "generator.bat";
+        FileUtil.copy(shellCopySourcePath, shellCopyDestPath, true);
+    }
+
+    protected void buildShell(String outputPath, String jarPath) throws IOException {
+        // 封装脚本
+        String shellOutputFilePath = outputPath + File.separator + "generator";
+        ScriptGenerator.doGenerate(shellOutputFilePath, jarPath);
+    }
+
+    /**
+     * 构建jar包
+     * @param outputPath
+     * @param meta
+     * @return 返回jar包所在路径
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    protected String buildJar(String outputPath, Meta meta) throws IOException, InterruptedException {
+        // 构建jar包
+        JarGenerator.doGenerate(outputPath);
+        String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
+        String jarPath = "target/" + jarName;
+        return jarPath;
+    }
+
+    protected void gitProject(Meta.Git git, String outputPath) {
+        // 使用 git 托管项目
+        if (git.getEnable()){
+            GitGenerator.doGenerator(outputPath, git.getGitignore());
+        }
+    }
+
+    protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
         // 获取 resources 目录
         ClassPathResource classPathResource = new ClassPathResource("");
         String inputResourcePath = classPathResource.getAbsolutePath();
@@ -87,30 +141,13 @@ public class MainGenerator {
         inputFilePath = inputResourcePath + File.separator + "templates/README.md.ftl";
         outputFilePath = outputPath + File.separator + "README.md";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-        // 使用 git 托管项目
-        if (meta.getGit().getEnable()){
-            GitGenerator.doGenerator(outputPath, meta.getGit().getGitignore());
-        }
-        // 构建jar包
-        JarGenerator.doGenerate(outputPath);
-        // 封装脚本
-        String shellOutputFilePath = outputPath + File.separator + "generator";
-        String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
-        String jarPath = "target/" + jarName;
-        ScriptGenerator.doGenerate(shellOutputFilePath, jarPath);
+    }
 
-        // 生成精简版的代码生成器（仅保留 原始模板文件、jar 包、脚本文件）
-        // - 原始模板文件
-        FileUtil.copy(sourceCopyDestPath, outputPath + "-dist", true);
-        // - jar 包
-        String jarCopySourcePath = outputPath + File.separator + jarPath;
-        String jarCopyDestPath = outputPath + "-dist" + File.separator + jarPath;
-        FileUtil.copy(jarCopySourcePath, jarCopyDestPath, true);
-        // - 脚本文件
-        String shellCopySourcePath = outputPath + File.separator + "generator";
-        String shellCopyDestPath = outputPath + "-dist";
-        FileUtil.copy(shellCopySourcePath, shellCopyDestPath, true);
-        shellCopySourcePath = outputPath + File.separator + "generator.bat";
-        FileUtil.copy(shellCopySourcePath, shellCopyDestPath, true);
+    protected String copySourceFiles(Meta meta, String outputPath) {
+        // 将模板项目 copy 到.source目录下
+        String sourcePath = meta.getFileConfig().getSourceRootPath();
+        String sourceCopyDestPath = outputPath + File.separator + ".source";
+        FileUtil.copy(sourcePath, sourceCopyDestPath, true);
+        return sourceCopyDestPath;
     }
 }

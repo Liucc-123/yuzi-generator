@@ -1,6 +1,6 @@
-package com.liucc.marker.generator.file;
+package com.liucc.maker.generator.file;
 
-import com.liucc.marker.model.DataModel;
+import com.liucc.maker.model.DataModel;
 import freemarker.template.TemplateException;
 
 import java.io.File;

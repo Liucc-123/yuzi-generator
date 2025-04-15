@@ -1,4 +1,4 @@
-package com.liucc.marker.generator;
+package com.liucc.maker.generator;
 
 import cn.hutool.core.io.FileUtil;
 
@@ -43,7 +43,9 @@ public class GitGenerator {
 
     public static void main(String[] args) {
         // 示例调用
-        doGenerator("/Users/liuchuangchuang/code/yuzi-generator/yuzi-generator-marker/generated/acm-template-pro-generator",
-                "/Users/liuchuangchuang/code/yuzi-generator/.gitignore");
+//        doGenerator("/Users/liuchuangchuang/code/yuzi-generator/yuzi-generator-marker/generated/acm-template-pro-generator",
+//                "/Users/liuchuangchuang/code/yuzi-generator/.gitignore");
+        String suffix = FileUtil.getSuffix("D:\\code\\yuzi-generator\\yuzi-generator-marker\\src\\main\\resources\\templates\\java\\generator\\MainGenerator.java.ftl");
+        System.out.println(suffix);
     }
 }

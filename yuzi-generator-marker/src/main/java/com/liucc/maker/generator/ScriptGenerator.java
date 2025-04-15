@@ -1,4 +1,4 @@
-package com.liucc.marker.generator;
+package com.liucc.maker.generator;
 
 import cn.hutool.core.io.FileUtil;
 

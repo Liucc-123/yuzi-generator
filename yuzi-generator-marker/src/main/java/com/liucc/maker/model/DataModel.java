@@ -1,4 +1,4 @@
-package com.liucc.marker.model;
+package com.liucc.maker.model;
 
 import lombok.Data;
 

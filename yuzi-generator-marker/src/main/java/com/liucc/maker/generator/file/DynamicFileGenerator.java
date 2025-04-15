@@ -1,4 +1,4 @@
-package com.liucc.marker.generator.file;
+package com.liucc.maker.generator.file;
 
 import cn.hutool.core.io.FileUtil;
 import freemarker.template.Configuration;

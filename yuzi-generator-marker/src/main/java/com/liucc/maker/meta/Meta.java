@@ -1,4 +1,4 @@
-package com.liucc.marker.meta;
+package com.liucc.maker.meta;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
