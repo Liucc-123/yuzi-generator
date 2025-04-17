@@ -16,8 +16,13 @@ public class JarGenerator {
         // 注意不同操作系统，执行的命令不同
         String winMavenCommand = "mvn.cmd clean package -DskipTests=true";
         String otherMavenCommand = "mvn clean package -DskipTests=true";
+        // 如果操作系统是 windows 用 winMavenCommand，否则用 otherMavenCommand
         String mavenCommand = winMavenCommand;
-//        String mavenCommand = otherMavenCommand;
+        if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
+            mavenCommand = winMavenCommand;
+        } else {
+            mavenCommand = otherMavenCommand;
+        }
 
         // 这里一定要拆分！
         ProcessBuilder processBuilder = new ProcessBuilder(mavenCommand.split(" "));

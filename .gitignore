@@ -3,8 +3,8 @@
 target
 yuzi-generator.iml
 .DS_Store
-# 忽略yuzi-generator-marker项目generated 目录
-yuzi-generator-marker/generated
+# 忽略generated 目录
+generated
 
 ### Java template
 # Compiled class file
