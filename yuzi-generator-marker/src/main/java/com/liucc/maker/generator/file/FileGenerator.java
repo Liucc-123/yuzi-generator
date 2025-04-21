@@ -1,6 +1,5 @@
 package com.liucc.maker.generator.file;
 
-import com.liucc.maker.model.DataModel;
 import freemarker.template.TemplateException;
 
 import java.io.File;
@@ -11,14 +10,6 @@ import java.io.IOException;
  */
 public class FileGenerator {
     private static final String BASIC_PATH = "yuzi-generator-marker";
-
-    public static void main(String[] args) throws TemplateException, IOException {
-        DataModel model = new DataModel();
-        model.setAuthor("liucc");
-        model.setLoop(true);
-        model.setOutputText("求和结果：");
-        doGenerate(model);
-    }
 
     public static void doGenerate(Object model) throws TemplateException, IOException {
         String projectPath = System.getProperty("user.dir"); // /Users/liuchuangchuang/code/yuzi-generator/yuzi-generator-marker
