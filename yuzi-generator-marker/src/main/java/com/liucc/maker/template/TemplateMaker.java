@@ -8,13 +8,14 @@ import cn.hutool.json.JSONUtil;
 import com.liucc.maker.meta.Meta;
 import com.liucc.maker.meta.enums.FileGenerateTypeEnum;
 import com.liucc.maker.meta.enums.FileTypeEnum;
+import com.liucc.maker.template.enums.FileFilterRangeEnum;
+import com.liucc.maker.template.enums.FileFilterRuleEnum;
+import com.liucc.maker.template.model.FileFilterConfig;
+import com.liucc.maker.template.model.TemplateMakerFileConfig;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,13 +26,19 @@ public class TemplateMaker {
 
     /**
      * 制作模板
-     *
+     * 
      * @param id id不存在，表示首次制作模板；id存在，更新模板
+     * @param sourceRootPath 项目根路径
+     * @param meta 元信息
+     * @param templateMakerConfig 文件过滤配置
+     * @param modelInfo 模型数据
+     * @param searchStr 替换字符串
      * @return
      */
-    private static Long makeTemplate(Long id, String sourceRootPath, Meta meta, List<String> fileInputPaths, Meta.ModelConfigDTO.ModelInfo modelInfo, String searchStr) {
-        if (CollUtil.isEmpty(fileInputPaths)) {
-            System.out.println("输入文件为空fileInputPaths：" + fileInputPaths);
+    private static Long makeTemplate(Long id, String sourceRootPath, Meta meta, TemplateMakerFileConfig templateMakerConfig, Meta.ModelConfigDTO.ModelInfo modelInfo, String searchStr) {
+        List<TemplateMakerFileConfig.FileInfoConfig> fileInfoConfigList = templateMakerConfig.getFiles();
+        if (CollUtil.isEmpty(fileInfoConfigList)) {
+            System.out.println("输入文件为空fileInputPaths：" + fileInfoConfigList);
             return null;
         }
         if (id == null) {
@@ -49,22 +56,32 @@ public class TemplateMaker {
         // 2、输入文件信息(相对路径)
         List<Meta.FileConfigDTO.FileInfo> fileInfos = new ArrayList<>();
         sourceRootPath = tempFilePath + File.separator + FileUtil.getLastPathEle(Paths.get(sourceRootPath)).toString();
-        for (String fileInputPath : fileInputPaths) {
-            File inputFile = new File(sourceRootPath + File.separator + fileInputPath);
-            // windows系统需要对文件路径进行转移
-            sourceRootPath = sourceRootPath.replaceAll("\\\\", "/");
-
-            // 如果输入文件是目录
-            if (FileUtil.isDirectory(inputFile)) {
-                List<File> fileList = FileUtil.loopFiles(inputFile);
-                for (File file : fileList) {
-                    Meta.FileConfigDTO.FileInfo fileInfo = makeFileTemplate(sourceRootPath, file, modelInfo, searchStr);
-                    fileInfos.add(fileInfo);
-                }
-            } else { // 单个文件
-                Meta.FileConfigDTO.FileInfo fileInfo = makeFileTemplate(sourceRootPath, inputFile, modelInfo, searchStr);
+        for (TemplateMakerFileConfig.FileInfoConfig fileInfoConfig : fileInfoConfigList) {
+            String fileInputPath = fileInfoConfig.getPath(); // 相对路径
+            String fileInputAbsolutePath = sourceRootPath + File.separator + fileInputPath;
+            // 文件过滤  获取所有符合条件的文件列表（都是文件，不存在目录）
+            List<File> fileList = FileFilter.doFilter(fileInputAbsolutePath, fileInfoConfig.getFilters());
+            for (File file : fileList) {
+                Meta.FileConfigDTO.FileInfo fileInfo = makeFileTemplate(sourceRootPath, file, modelInfo, searchStr);
                 fileInfos.add(fileInfo);
             }
+        }
+
+        // 新增文件组配置
+        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = templateMakerConfig.getFileGroupConfig();
+        String condition = fileGroupConfig.getCondition();
+        String groupKey = fileGroupConfig.getGroupKey();
+        String groupName = fileGroupConfig.getGroupName();
+        if (StrUtil.isNotBlank(groupKey)){ // 说明是文件组
+            Meta.FileConfigDTO.FileInfo fileInfoGroup = new Meta.FileConfigDTO.FileInfo();
+            fileInfoGroup.setType(FileTypeEnum.GROUP.getType());
+            fileInfoGroup.setCondition(condition);
+            fileInfoGroup.setGroupKey(groupKey);
+            fileInfoGroup.setGroupName(groupName);
+            fileInfoGroup.setFiles(fileInfos);
+            // 重置 fileInfos 为文件组
+            fileInfos = new ArrayList<>();
+            fileInfos.add(fileInfoGroup);
         }
 
         // 三、生成元信息配置文件
@@ -108,6 +125,8 @@ public class TemplateMaker {
     }
 
     private static Meta.FileConfigDTO.FileInfo makeFileTemplate(String sourceRootPath, File inputFile, Meta.ModelConfigDTO.ModelInfo modelInfo, String searchStr) {
+        // windows系统需要对文件路径进行转移
+        sourceRootPath = sourceRootPath.replaceAll("\\\\", "/");
         String fileInputAbsolutePath = inputFile.getAbsolutePath();
         // windows系统需要对文件路径进行转移
         fileInputAbsolutePath = fileInputAbsolutePath.replaceAll("\\\\", "/");
@@ -149,10 +168,40 @@ public class TemplateMaker {
         if (CollUtil.isEmpty(fileInfoList)) {
             return fileInfoList;
         }
-        Collection<Meta.FileConfigDTO.FileInfo> values = fileInfoList.stream().collect(Collectors.toMap(Meta.FileConfigDTO.FileInfo::getInputPath,
-                Function.identity(), (existing, replacement) -> replacement)).values();
-        List<Meta.FileConfigDTO.FileInfo> distinctList = new ArrayList<>(values);
-        return distinctList;
+        // 1、将所有的文件列表（fileInfo）分为有分组和无分组的；
+        List<Meta.FileConfigDTO.FileInfo> groupFileList = fileInfoList.stream()
+                .filter(file -> StrUtil.isNotBlank(file.getGroupKey()))
+                .collect(Collectors.toList());
+        // 2、对于有分组的文件配置，按照 groupKey 进行分组，同分组内的相同文件进行合并，不同分组的相同文件进行保留；
+        // testA -> [file1, file2, file3], testA -> [file2, file3, file4], testB -> [file2, file3, file4]
+        // ==> testA -> [file1, file2, file3, file4], testB -> [file2, file3, file4]
+        Map<String, List<Meta.FileConfigDTO.FileInfo>> groupKeyFileInfoListMap = groupFileList.stream()
+                .collect(Collectors.groupingBy(Meta.FileConfigDTO.FileInfo::getGroupKey));
+        // 同组内的文件进行合并
+        Map<String, Meta.FileConfigDTO.FileInfo> groupKeyMergedFileInfoMap = new HashMap<>();
+        for (Map.Entry<String, List<Meta.FileConfigDTO.FileInfo>> entry : groupKeyFileInfoListMap.entrySet()) {
+            List<Meta.FileConfigDTO.FileInfo> tempFileInfoList = entry.getValue();
+            // 合并后的文件列表
+            List<Meta.FileConfigDTO.FileInfo> newFileInfoList = new ArrayList<>(tempFileInfoList.stream().flatMap(fileInfo -> fileInfo.getFiles().stream()).collect(
+                    Collectors.toMap(Meta.FileConfigDTO.FileInfo::getInputPath,
+                            Function.identity(), (existing, replacement) -> replacement)
+            ).values());
+            // 更新 group 组配置，使用最后一个组配置进行覆盖
+            Meta.FileConfigDTO.FileInfo newestFileInfo = CollUtil.getLast(newFileInfoList);
+            newestFileInfo.setFiles(newFileInfoList);
+            String groupKey = entry.getKey();
+            groupKeyMergedFileInfoMap.put(groupKey, newestFileInfo);
+        }
+        // 3、创建一个新的文件配置列表（结果列表），将合并后的分组添加到结果列表
+        List<Meta.FileConfigDTO.FileInfo> resultList = new ArrayList<>();
+        resultList.addAll(groupKeyMergedFileInfoMap.values());
+        // 4、将无分组的文件配置添加到结果列表
+        List<Meta.FileConfigDTO.FileInfo> noGroupFileList = new ArrayList<>(fileInfoList.stream()
+                .filter(file -> StrUtil.isBlank(file.getGroupKey()))
+                .collect(Collectors.toMap(Meta.FileConfigDTO.FileInfo::getInputPath,
+                        Function.identity(), (existing, replacement) -> replacement)).values());
+        resultList.addAll(noGroupFileList);
+        return resultList;
     }
 
     /**
@@ -195,8 +244,32 @@ public class TemplateMaker {
         // 替换变量（第二次）
 //        String str = "MainTemplate";
         String inputFilePath1 = "src/main/java/com/liucc/springbootinit/common";
-        String inputFilePath2 = "src/main/java/com/liucc/springbootinit/config";
-        Long id = makeTemplate(1914326387714437120L, sourceRootPath, meta, Arrays.asList(inputFilePath1, inputFilePath2), modelInfo, str);
+        String inputFilePath2 = "src/main/java/com/liucc/springbootinit/controller";
+        
+        // 准备文件过滤配置
+        TemplateMakerFileConfig templateMakerConfig = new TemplateMakerFileConfig();
+        TemplateMakerFileConfig.FileInfoConfig fileInfoConfig1 = new TemplateMakerFileConfig.FileInfoConfig();
+        fileInfoConfig1.setPath(inputFilePath1);
+        FileFilterConfig fileFilter1 = FileFilterConfig.builder()
+                .range(FileFilterRangeEnum.FILENAME.getType())
+                .rule(FileFilterRuleEnum.CONTAINS.getType())
+                .value("Base")
+                .build();
+        fileInfoConfig1.setFilters(Arrays.asList(fileFilter1));
+
+        // 不设置过滤器
+        TemplateMakerFileConfig.FileInfoConfig fileInfoConfig2 = new TemplateMakerFileConfig.FileInfoConfig();
+        fileInfoConfig2.setPath(inputFilePath2);
+        List<TemplateMakerFileConfig.FileInfoConfig> fileInfoConfigs = Arrays.asList(fileInfoConfig1, fileInfoConfig2);
+        templateMakerConfig.setFiles(fileInfoConfigs);
+
+        // 测试新增文件组配置
+        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = new TemplateMakerFileConfig.FileGroupConfig();
+        fileGroupConfig.setGroupKey("test");
+        fileGroupConfig.setGroupName("测试分组");
+        fileGroupConfig.setCondition("outputText");
+        templateMakerConfig.setFileGroupConfig(fileGroupConfig);
+        Long id = makeTemplate(1914654544168448000L, sourceRootPath, meta, templateMakerConfig, modelInfo, str);
         System.out.println("id = " + id);
     }
 }
