@@ -76,7 +76,7 @@ public abstract class GeneratorTemplate  {
 
     protected void gitProject(Meta.Git git, String outputPath) {
         // 使用 git 托管项目
-        if (git.getEnable()){
+        if (git != null && git.getEnable()){
             GitGenerator.doGenerator(outputPath, git.getGitignore());
         }
     }

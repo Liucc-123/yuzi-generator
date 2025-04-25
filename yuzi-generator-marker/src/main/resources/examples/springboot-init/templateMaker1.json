@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "fileConfig": {
+    "files": [
+      {
+        "path": ""
+      }
+    ]
+  },
+  "modelConfig": {
+    "models": [
+      {
+        "fieldName": "basePackage",
+        "description": "基础包名",
+        "type": "String",
+        "defaultValue": "com.liucc",
+        "replaceText": "com.yupi"
+      }
+    ]
+  }
+}

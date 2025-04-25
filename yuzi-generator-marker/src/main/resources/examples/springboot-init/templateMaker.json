@@ -1,0 +1,8 @@
+{
+  "id": 1,
+  "meta": {
+    "name": "springboot-init-generator",
+    "description": "springboot-init 模板生成器"
+  },
+  "sourceRootPath": "../../../yuzi-generator-demo-projects/springboot-init"
+}

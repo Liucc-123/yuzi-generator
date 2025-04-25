@@ -30,7 +30,7 @@ public class DataModel {
      * 用于生成核心模板文件
      */
     @Data
-    public static class MainTemplate {
+    public static class ${modelInfo.type} {
     <#list modelInfo.models as subModelInfo>
         <@generateModel indent="        " modelInfo=subModelInfo/>
     </#list>

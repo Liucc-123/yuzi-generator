@@ -12,8 +12,13 @@ import java.util.concurrent.Callable;
 <#--宏定义-->
 <#--生成选项-->
 <#macro generateOption indent modelInfo>
-${indent}@CommandLine.Option(names = {<#if modelInfo.abbr??>"-${modelInfo.abbr}"</#if>, <#if modelInfo.fieldName??>"--${modelInfo.fieldName}"</#if>}, arity = "0..1", <#if modelInfo.description??>description = "${modelInfo.description}"</#if>, interactive = true, echo = true)
+${indent}@CommandLine.Option(names = {<#if modelInfo.abbr??>"-${modelInfo.abbr}", </#if><#if modelInfo.fieldName??>"--${modelInfo.fieldName}"</#if>}, arity = "0..1", <#if modelInfo.description??>description = "${modelInfo.description}"</#if>, interactive = true, echo = true)
 ${indent}private ${modelInfo.type} ${modelInfo.fieldName} <#if modelInfo.defaultValue??>= ${modelInfo.defaultValue?c}</#if>;
+</#macro>
+<#macro generateCommand indent modelInfo>
+${indent}System.out.println("请输入${modelInfo.groupName}信息：");
+${indent}CommandLine ${modelInfo.groupKey}CommandLine = new CommandLine(${modelInfo.type}Command.class);
+${indent}${modelInfo.groupKey}CommandLine.execute(${modelInfo.allArgsStr});
 </#macro>
 
 @CommandLine.Command(name = "generate", description = "生成代码", mixinStandardHelpOptions = true)
@@ -45,16 +50,17 @@ public class GenerateCommand implements Callable<Integer> {
 </#list>
 
     public Integer call() throws Exception {
-        <#list modelConfig.models as modelInfo>
-            <#if modelInfo.condition??>
-            // 如果用户开启 loop，再让用户进一步填写核心配置信息
-                if (${modelInfo.condition}){
-                System.out.println("请输入${modelInfo.groupName}信息：");
-                CommandLine commandLine = new CommandLine(${modelInfo.type}Command.class);
-                commandLine.execute(${modelInfo.allArgsStr});
-            }
-            </#if>
-        </#list>
+    <#list modelConfig.models as modelInfo>
+    <#if modelInfo.groupKey??>
+        <#if modelInfo.condition??>
+        if (${modelInfo.condition}){
+            <@generateCommand indent="           " modelInfo=modelInfo/>
+        }
+        <#else>
+        <@generateCommand indent="      " modelInfo=modelInfo/>
+        </#if>
+    </#if>
+    </#list>
         // 填充数据模型
         DataModel dataModel = new DataModel();
         BeanUtil.copyProperties(this, dataModel);
