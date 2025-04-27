@@ -1,26 +1,26 @@
-package com.yupi.springbootinit.service.impl;
+package com.liucc.springbootinit.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yupi.springbootinit.common.ErrorCode;
-import com.yupi.springbootinit.constant.CommonConstant;
-import com.yupi.springbootinit.exception.BusinessException;
-import com.yupi.springbootinit.exception.ThrowUtils;
-import com.yupi.springbootinit.mapper.PostFavourMapper;
-import com.yupi.springbootinit.mapper.PostMapper;
-import com.yupi.springbootinit.mapper.PostThumbMapper;
-import com.yupi.springbootinit.model.dto.post.PostEsDTO;
-import com.yupi.springbootinit.model.dto.post.PostQueryRequest;
-import com.yupi.springbootinit.model.entity.Post;
-import com.yupi.springbootinit.model.entity.PostFavour;
-import com.yupi.springbootinit.model.entity.PostThumb;
-import com.yupi.springbootinit.model.entity.User;
-import com.yupi.springbootinit.model.vo.PostVO;
-import com.yupi.springbootinit.model.vo.UserVO;
-import com.yupi.springbootinit.service.PostService;
-import com.yupi.springbootinit.service.UserService;
-import com.yupi.springbootinit.utils.SqlUtils;
+import com.liucc.springbootinit.common.ErrorCode;
+import com.liucc.springbootinit.constant.CommonConstant;
+import com.liucc.springbootinit.exception.BusinessException;
+import com.liucc.springbootinit.exception.ThrowUtils;
+import com.liucc.springbootinit.mapper.PostFavourMapper;
+import com.liucc.springbootinit.mapper.PostMapper;
+import com.liucc.springbootinit.mapper.PostThumbMapper;
+import com.liucc.springbootinit.model.dto.post.PostEsDTO;
+import com.liucc.springbootinit.model.dto.post.PostQueryRequest;
+import com.liucc.springbootinit.model.entity.Post;
+import com.liucc.springbootinit.model.entity.PostFavour;
+import com.liucc.springbootinit.model.entity.PostThumb;
+import com.liucc.springbootinit.model.entity.User;
+import com.liucc.springbootinit.model.vo.PostVO;
+import com.liucc.springbootinit.model.vo.UserVO;
+import com.liucc.springbootinit.service.PostService;
+import com.liucc.springbootinit.service.UserService;
+import com.liucc.springbootinit.utils.SqlUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,8 +49,8 @@ import org.springframework.stereotype.Service;
 /**
  * 帖子服务实现
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
+ * @from <a href="https://liucc.icu">编程导航知识星球</a>
  */
 @Service
 @Slf4j

@@ -1,16 +1,16 @@
-package com.yupi.springbootinit.controller;
+package com.liucc.springbootinit.controller;
 
 import cn.hutool.core.io.FileUtil;
-import com.yupi.springbootinit.common.BaseResponse;
-import com.yupi.springbootinit.common.ErrorCode;
-import com.yupi.springbootinit.common.ResultUtils;
-import com.yupi.springbootinit.constant.FileConstant;
-import com.yupi.springbootinit.exception.BusinessException;
-import com.yupi.springbootinit.manager.CosManager;
-import com.yupi.springbootinit.model.dto.file.UploadFileRequest;
-import com.yupi.springbootinit.model.entity.User;
-import com.yupi.springbootinit.model.enums.FileUploadBizEnum;
-import com.yupi.springbootinit.service.UserService;
+import com.liucc.springbootinit.common.BaseResponse;
+import com.liucc.springbootinit.common.ErrorCode;
+import com.liucc.springbootinit.common.ResultUtils;
+import com.liucc.springbootinit.constant.FileConstant;
+import com.liucc.springbootinit.exception.BusinessException;
+import com.liucc.springbootinit.manager.CosManager;
+import com.liucc.springbootinit.model.dto.file.UploadFileRequest;
+import com.liucc.springbootinit.model.entity.User;
+import com.liucc.springbootinit.model.enums.FileUploadBizEnum;
+import com.liucc.springbootinit.service.UserService;
 import java.io.File;
 import java.util.Arrays;
 import javax.annotation.Resource;
@@ -26,8 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * 文件接口
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
+ * @from <a href="https://liucc.icu">编程导航知识星球</a>
  */
 @RestController
 @RequestMapping("/file")

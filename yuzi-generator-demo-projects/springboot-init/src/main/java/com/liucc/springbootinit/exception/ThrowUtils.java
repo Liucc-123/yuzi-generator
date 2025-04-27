@@ -1,12 +1,12 @@
-package com.yupi.springbootinit.exception;
+package com.liucc.springbootinit.exception;
 
-import com.yupi.springbootinit.common.ErrorCode;
+import com.liucc.springbootinit.common.ErrorCode;
 
 /**
  * 抛异常工具类
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
+ * @from <a href="https://liucc.icu">编程导航知识星球</a>
  */
 public class ThrowUtils {
 

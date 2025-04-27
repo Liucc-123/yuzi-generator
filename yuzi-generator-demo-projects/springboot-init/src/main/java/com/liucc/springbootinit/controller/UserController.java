@@ -1,25 +1,25 @@
-package com.yupi.springbootinit.controller;
+package com.liucc.springbootinit.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yupi.springbootinit.annotation.AuthCheck;
-import com.yupi.springbootinit.common.BaseResponse;
-import com.yupi.springbootinit.common.DeleteRequest;
-import com.yupi.springbootinit.common.ErrorCode;
-import com.yupi.springbootinit.common.ResultUtils;
-import com.yupi.springbootinit.config.WxOpenConfig;
-import com.yupi.springbootinit.constant.UserConstant;
-import com.yupi.springbootinit.exception.BusinessException;
-import com.yupi.springbootinit.exception.ThrowUtils;
-import com.yupi.springbootinit.model.dto.user.UserAddRequest;
-import com.yupi.springbootinit.model.dto.user.UserLoginRequest;
-import com.yupi.springbootinit.model.dto.user.UserQueryRequest;
-import com.yupi.springbootinit.model.dto.user.UserRegisterRequest;
-import com.yupi.springbootinit.model.dto.user.UserUpdateMyRequest;
-import com.yupi.springbootinit.model.dto.user.UserUpdateRequest;
-import com.yupi.springbootinit.model.entity.User;
-import com.yupi.springbootinit.model.vo.LoginUserVO;
-import com.yupi.springbootinit.model.vo.UserVO;
-import com.yupi.springbootinit.service.UserService;
+import com.liucc.springbootinit.annotation.AuthCheck;
+import com.liucc.springbootinit.common.BaseResponse;
+import com.liucc.springbootinit.common.DeleteRequest;
+import com.liucc.springbootinit.common.ErrorCode;
+import com.liucc.springbootinit.common.ResultUtils;
+import com.liucc.springbootinit.config.WxOpenConfig;
+import com.liucc.springbootinit.constant.UserConstant;
+import com.liucc.springbootinit.exception.BusinessException;
+import com.liucc.springbootinit.exception.ThrowUtils;
+import com.liucc.springbootinit.model.dto.user.UserAddRequest;
+import com.liucc.springbootinit.model.dto.user.UserLoginRequest;
+import com.liucc.springbootinit.model.dto.user.UserQueryRequest;
+import com.liucc.springbootinit.model.dto.user.UserRegisterRequest;
+import com.liucc.springbootinit.model.dto.user.UserUpdateMyRequest;
+import com.liucc.springbootinit.model.dto.user.UserUpdateRequest;
+import com.liucc.springbootinit.model.entity.User;
+import com.liucc.springbootinit.model.vo.LoginUserVO;
+import com.liucc.springbootinit.model.vo.UserVO;
+import com.liucc.springbootinit.service.UserService;
 
 import java.util.List;
 import javax.annotation.Resource;
@@ -40,13 +40,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.yupi.springbootinit.service.impl.UserServiceImpl.SALT;
+import static com.liucc.springbootinit.service.impl.UserServiceImpl.SALT;
 
 /**
  * 用户接口
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
+ * @from <a href="https://liucc.icu">编程导航知识星球</a>
  */
 @RestController
 @RequestMapping("/user")

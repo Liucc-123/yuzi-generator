@@ -1,13 +1,13 @@
-package com.yupi.springbootinit.controller;
+package com.liucc.springbootinit.controller;
 
-import com.yupi.springbootinit.common.BaseResponse;
-import com.yupi.springbootinit.common.ErrorCode;
-import com.yupi.springbootinit.common.ResultUtils;
-import com.yupi.springbootinit.exception.BusinessException;
-import com.yupi.springbootinit.model.dto.postthumb.PostThumbAddRequest;
-import com.yupi.springbootinit.model.entity.User;
-import com.yupi.springbootinit.service.PostThumbService;
-import com.yupi.springbootinit.service.UserService;
+import com.liucc.springbootinit.common.BaseResponse;
+import com.liucc.springbootinit.common.ErrorCode;
+import com.liucc.springbootinit.common.ResultUtils;
+import com.liucc.springbootinit.exception.BusinessException;
+import com.liucc.springbootinit.model.dto.postthumb.PostThumbAddRequest;
+import com.liucc.springbootinit.model.entity.User;
+import com.liucc.springbootinit.service.PostThumbService;
+import com.liucc.springbootinit.service.UserService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 帖子点赞接口
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
+ * @from <a href="https://liucc.icu">编程导航知识星球</a>
  */
 @RestController
 @RequestMapping("/post_thumb")
