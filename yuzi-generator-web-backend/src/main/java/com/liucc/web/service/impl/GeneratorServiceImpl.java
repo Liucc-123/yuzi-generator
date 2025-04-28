@@ -76,19 +76,21 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
             return queryWrapper;
         }
         String searchText = generatorQueryRequest.getSearchText();
+        String name = generatorQueryRequest.getName();
         String sortField = generatorQueryRequest.getSortField();
         String sortOrder = generatorQueryRequest.getSortOrder();
         Long id = generatorQueryRequest.getId();
         String title = generatorQueryRequest.getTitle();
-        String content = generatorQueryRequest.getContent();
+        String description = generatorQueryRequest.getDescription();
         List<String> tagList = generatorQueryRequest.getTags();
         Long userId = generatorQueryRequest.getUserId();
         // 拼接查询条件
         if (StringUtils.isNotBlank(searchText)) {
             queryWrapper.and(qw -> qw.like("title", searchText).or().like("content", searchText));
         }
+        queryWrapper.like(StringUtils.isNotBlank(name), "name", name);
         queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
-        queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
+        queryWrapper.like(StringUtils.isNotBlank(description), "description", description);
         if (CollUtil.isNotEmpty(tagList)) {
             for (String tag : tagList) {
                 queryWrapper.like("tags", "\"" + tag + "\"");

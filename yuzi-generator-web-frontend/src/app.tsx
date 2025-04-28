@@ -5,6 +5,7 @@ import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown } from './components/RightContent/AvatarDropdown';
 import { requestConfig } from './requestConfig';
+import logo from '@/assets/logo.png';
 
 const loginPath = '/user/login';
 
@@ -40,6 +41,7 @@ export async function getInitialState(): Promise<InitialState> {
 // @ts-ignore
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
+    logo, 
     avatarProps: {
       render: () => {
         return <AvatarDropdown />;
