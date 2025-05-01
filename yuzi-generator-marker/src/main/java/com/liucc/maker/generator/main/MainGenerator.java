@@ -12,7 +12,8 @@ public class MainGenerator extends GeneratorTemplate {
      * @param jarPath
      */
     @Override
-    protected void generateDist(String sourceCopyDestPath, String outputPath, String jarPath) {
+    protected String generateDist(String sourceCopyDestPath, String outputPath, String jarPath) {
         System.out.println("我不需要精简版代码，不要给我生成啦~~~");
+        return "";
     }
 }

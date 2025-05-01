@@ -144,7 +144,6 @@ declare namespace API {
   type GeneratorQueryRequest = {
     author?: string;
     basePackage?: string;
-    content?: string;
     createTime?: string;
     current?: number;
     description?: string;
@@ -303,6 +302,11 @@ declare namespace API {
     searchCount?: boolean;
     size?: number;
     total?: number;
+  };
+
+  type testFileDownloadUsingGETParams = {
+    /** filePath */
+    filePath: string;
   };
 
   type uploadFileUsingPOSTParams = {

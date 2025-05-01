@@ -6,6 +6,7 @@ yuzi-generator.iml
 # 忽略generated 目录
 generated
 .temp
+application-local.yml
 
 ### Java template
 # Compiled class file

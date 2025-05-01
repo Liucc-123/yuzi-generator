@@ -78,7 +78,7 @@ export async function listGeneratorByPageUsingPost(
 }
 
 /** listGeneratorVOByPage POST /api/generator/list/page/vo */
-export async function listGeneratorVOByPage(
+export async function listGeneratorVoByPageUsingPost(
   body: API.GeneratorQueryRequest,
   options?: { [key: string]: any },
 ) {

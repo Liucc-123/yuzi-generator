@@ -2,7 +2,7 @@
     "name": "springboot-init-generator",
     "description": "springboot-init 模板生成器",
     "fileConfig": {
-        "sourceRootPath": "D:/code/yuzi-generator/yuzi-generator-marker/.temp/1/springboot-init",
+        "sourceRootPath": "/Users/liuchuangchuang/code/yuzi-generator/yuzi-generator-marker/.temp/1/springboot-init",
         "type": "dir",
         "files": [
             {
@@ -12,8 +12,14 @@
                 "groupName": "帖子文件组",
                 "files": [
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/service/PostThumbService.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/service/PostThumbService.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/service/PostThumbService.java",
+                        "type": "file",
+                        "generateType": "static"
+                    },
+                    {
+                        "inputPath": "src/main/resources/mapper/PostFavourMapper.xml.ftl",
+                        "outputPath": "src/main/resources/mapper/PostFavourMapper.xml",
                         "type": "file",
                         "generateType": "dynamic"
                     },
@@ -24,136 +30,130 @@
                         "generateType": "dynamic"
                     },
                     {
-                        "inputPath": "src/main/resources/mapper/PostFavourMapper.xml.ftl",
-                        "outputPath": "src/main/resources/mapper/PostFavourMapper.xml",
-                        "type": "file",
-                        "generateType": "dynamic"
-                    },
-                    {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/controller/PostController.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/controller/PostController.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/controller/PostController.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/controller/PostThumbController.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/controller/PostThumbController.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/controller/PostThumbController.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/entity/Post.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/entity/Post.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/entity/Post.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostAddRequest.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostAddRequest.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostAddRequest.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/service/PostFavourService.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/service/PostFavourService.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/service/PostFavourService.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/postthumb/PostThumbAddRequest.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/postthumb/PostThumbAddRequest.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/postthumb/PostThumbAddRequest.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/service/impl/PostServiceImpl.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/service/impl/PostServiceImpl.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/service/impl/PostServiceImpl.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/mapper/PostFavourMapper.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/mapper/PostFavourMapper.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/mapper/PostFavourMapper.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/mapper/PostThumbMapper.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/mapper/PostThumbMapper.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/mapper/PostThumbMapper.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/mapper/PostMapper.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/mapper/PostMapper.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/mapper/PostMapper.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/entity/PostFavour.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/entity/PostFavour.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/entity/PostFavour.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostEditRequest.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostEditRequest.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostEditRequest.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/vo/PostVO.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/vo/PostVO.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/vo/PostVO.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/postfavour/PostFavourAddRequest.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/postfavour/PostFavourAddRequest.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/postfavour/PostFavourAddRequest.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/controller/PostFavourController.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/controller/PostFavourController.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/controller/PostFavourController.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/entity/PostThumb.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/entity/PostThumb.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/entity/PostThumb.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/service/impl/PostFavourServiceImpl.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/service/impl/PostFavourServiceImpl.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/service/impl/PostFavourServiceImpl.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostQueryRequest.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostQueryRequest.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostQueryRequest.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/service/PostService.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/service/PostService.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/service/PostService.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/service/impl/PostThumbServiceImpl.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/service/impl/PostThumbServiceImpl.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/service/impl/PostThumbServiceImpl.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/postfavour/PostFavourQueryRequest.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/postfavour/PostFavourQueryRequest.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/postfavour/PostFavourQueryRequest.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
                     },
                     {
                         "inputPath": "src/main/resources/mapper/PostThumbMapper.xml.ftl",
@@ -162,30 +162,30 @@
                         "generateType": "dynamic"
                     },
                     {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostUpdateRequest.java.ftl",
-                        "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostUpdateRequest.java",
-                        "type": "file",
-                        "generateType": "dynamic"
-                    },
-                    {
-                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostEsDTO.java.ftl",
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostEsDTO.java",
                         "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostEsDTO.java",
                         "type": "file",
-                        "generateType": "dynamic"
+                        "generateType": "static"
+                    },
+                    {
+                        "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostUpdateRequest.java",
+                        "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/post/PostUpdateRequest.java",
+                        "type": "file",
+                        "generateType": "static"
                     }
                 ]
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/common/BaseResponse.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/common/BaseResponse.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/common/BaseResponse.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/exception/GlobalExceptionHandler.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/exception/GlobalExceptionHandler.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/exception/GlobalExceptionHandler.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
                 "inputPath": "mvnw",
@@ -201,22 +201,22 @@
                 "condition": "needDocs"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/controller/UserController.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/controller/UserController.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/controller/UserController.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/config/MyBatisPlusConfig.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/config/MyBatisPlusConfig.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/config/MyBatisPlusConfig.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/vo/LoginUserVO.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/vo/LoginUserVO.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/vo/LoginUserVO.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
                 "inputPath": "pom.xml.ftl",
@@ -231,113 +231,95 @@
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/service/impl/UserServiceImpl.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/service/impl/UserServiceImpl.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/service/impl/UserServiceImpl.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/config/JsonConfig.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/config/JsonConfig.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/config/JsonConfig.java",
                 "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/test/.DS_Store",
-                "outputPath": "src/test/.DS_Store",
-                "type": "file",
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/entity/User.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/entity/User.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/entity/User.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserLoginRequest.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserLoginRequest.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserLoginRequest.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/config/WxOpenConfig.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/config/WxOpenConfig.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/config/WxOpenConfig.java",
                 "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": ".DS_Store",
-                "outputPath": ".DS_Store",
-                "type": "file",
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserUpdateMyRequest.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserUpdateMyRequest.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserUpdateMyRequest.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/enums/FileUploadBizEnum.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/enums/FileUploadBizEnum.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/enums/FileUploadBizEnum.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/main/java/com/liucc/springbootinit/common/DeleteRequest.java.ftl",
-                "outputPath": "src/main/java/com/liucc/springbootinit/common/DeleteRequest.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/enums/UserRoleEnum.java.ftl",
-                "outputPath": "src/main/java/com/liucc/springbootinit/model/enums/UserRoleEnum.java",
-                "type": "file",
-                "generateType": "dynamic"
-            },
-            {
-                "inputPath": "src/.DS_Store",
-                "outputPath": "src/.DS_Store",
                 "type": "file",
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/exception/ThrowUtils.java.ftl",
-                "outputPath": "src/main/java/com/liucc/springbootinit/exception/ThrowUtils.java",
+                "inputPath": "src/main/java/com/liucc/springbootinit/common/DeleteRequest.java",
+                "outputPath": "src/main/java/com/liucc/springbootinit/common/DeleteRequest.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/mapper/UserMapper.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/enums/UserRoleEnum.java",
+                "outputPath": "src/main/java/com/liucc/springbootinit/model/enums/UserRoleEnum.java",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": "src/main/java/com/liucc/springbootinit/mapper/UserMapper.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/mapper/UserMapper.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/service/UserService.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/exception/ThrowUtils.java",
+                "outputPath": "src/main/java/com/liucc/springbootinit/exception/ThrowUtils.java",
+                "type": "file",
+                "generateType": "static"
+            },
+            {
+                "inputPath": "src/main/java/com/liucc/springbootinit/service/UserService.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/service/UserService.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/controller/FileController.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/controller/FileController.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/controller/FileController.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/config/CorsConfig.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/config/CorsConfig.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/config/CorsConfig.java",
                 "type": "file",
-                "generateType": "dynamic",
+                "generateType": "static",
                 "condition": "needCors"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserAddRequest.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserAddRequest.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserAddRequest.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
                 "inputPath": "mvnw.cmd",
@@ -346,16 +328,16 @@
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/constant/CommonConstant.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/constant/CommonConstant.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/constant/CommonConstant.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/MainApplication.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/MainApplication.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/MainApplication.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
                 "inputPath": "README.md.ftl",
@@ -364,10 +346,10 @@
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserUpdateRequest.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserUpdateRequest.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserUpdateRequest.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
                 "inputPath": "Dockerfile",
@@ -376,64 +358,64 @@
                 "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/controller/WxMpController.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/controller/WxMpController.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/controller/WxMpController.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/file/UploadFileRequest.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/file/UploadFileRequest.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/file/UploadFileRequest.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/exception/BusinessException.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/exception/BusinessException.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/exception/BusinessException.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/common/PageRequest.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/common/PageRequest.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/common/PageRequest.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/constant/FileConstant.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/constant/FileConstant.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/constant/FileConstant.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserQueryRequest.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserQueryRequest.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserQueryRequest.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/common/ErrorCode.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/common/ErrorCode.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/common/ErrorCode.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/common/ResultUtils.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/common/ResultUtils.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/common/ResultUtils.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserRegisterRequest.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserRegisterRequest.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/dto/user/UserRegisterRequest.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/constant/UserConstant.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/constant/UserConstant.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/constant/UserConstant.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             },
             {
                 "inputPath": "src/main/resources/application.yml.ftl",
@@ -442,10 +424,10 @@
                 "generateType": "dynamic"
             },
             {
-                "inputPath": "src/main/java/com/liucc/springbootinit/model/vo/UserVO.java.ftl",
+                "inputPath": "src/main/java/com/liucc/springbootinit/model/vo/UserVO.java",
                 "outputPath": "src/main/java/com/liucc/springbootinit/model/vo/UserVO.java",
                 "type": "file",
-                "generateType": "dynamic"
+                "generateType": "static"
             }
         ]
     },

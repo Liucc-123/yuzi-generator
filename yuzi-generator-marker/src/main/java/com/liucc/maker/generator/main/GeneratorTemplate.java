@@ -36,7 +36,15 @@ public abstract class GeneratorTemplate  {
         generateDist(sourceCopyDestPath, outputPath, jarPath);
     }
 
-    protected void generateDist(String sourceCopyDestPath, String outputPath, String jarPath) {
+    /**
+     * 生成精简版产物包
+     *
+     * @param sourceCopyDestPath 原始模板文件
+     * @param outputPath 目标路径
+     * @param jarPath jar包路径
+     * @return
+     */
+    protected String generateDist(String sourceCopyDestPath, String outputPath, String jarPath) {
         // 生成精简版的代码生成器（仅保留 原始模板文件、jar 包、脚本文件）
         // - 原始模板文件
         FileUtil.copy(sourceCopyDestPath, outputPath + "-dist", true);
@@ -50,6 +58,7 @@ public abstract class GeneratorTemplate  {
         FileUtil.copy(shellCopySourcePath, shellCopyDestPath, true);
         shellCopySourcePath = outputPath + File.separator + "generator.bat";
         FileUtil.copy(shellCopySourcePath, shellCopyDestPath, true);
+        return shellCopyDestPath;
     }
 
     protected void buildShell(String outputPath, String jarPath) throws IOException {
