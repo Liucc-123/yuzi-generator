@@ -4,6 +4,7 @@ import { PageContainer, ProFormSelect, ProFormText, QueryFilter } from '@ant-des
 import { Avatar, Card, Flex, Image, Input, List, message, Tabs, Tag, Typography } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * 默认分页参数
@@ -155,6 +156,7 @@ const IndexPage: React.FC = () => {
         }}
         renderItem={(data) => (
           <List.Item>
+            <Link to={`/generator/detail/${data.id}`}>
             <Card hoverable cover={<Image alt={data.name} src={data.picture} />}>
               <Card.Meta
                 title={<a>{data.name}</a>}
@@ -164,7 +166,7 @@ const IndexPage: React.FC = () => {
                   </Typography.Paragraph>
                 }
               />
-              {tagListView(data.tagList)}
+              {tagListView(data.tags)}
               <Flex justify="space-between" align="center">
                 <Typography.Text type="secondary" style={{ fontSize: 12 }}>
                   {moment(data.createTime).fromNow()}
@@ -174,6 +176,7 @@ const IndexPage: React.FC = () => {
                 </div>
               </Flex>
             </Card>
+            </Link>
           </List.Item>
         )}
       />

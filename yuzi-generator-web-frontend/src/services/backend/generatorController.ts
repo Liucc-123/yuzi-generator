@@ -32,6 +32,21 @@ export async function deleteGeneratorUsingPost(
   });
 }
 
+/** download GET /api/generator/download */
+export async function downloadUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.downloadUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<any>('/api/generator/download', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** editGenerator POST /api/generator/edit */
 export async function editGeneratorUsingPost(
   body: API.GeneratorEditRequest,
