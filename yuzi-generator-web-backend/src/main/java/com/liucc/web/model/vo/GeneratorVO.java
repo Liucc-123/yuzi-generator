@@ -106,7 +106,7 @@ public class GeneratorVO implements Serializable {
     /**
      * 标签列表
      */
-    private List<String> tagList;
+    private List<String> tags;
 
     /**
      * 创建人信息
@@ -125,7 +125,7 @@ public class GeneratorVO implements Serializable {
         }
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorVO, generator);
-        List<String> tagList = generatorVO.getTagList();
+        List<String> tagList = generatorVO.getTags();
         generator.setTags(JSONUtil.toJsonStr(tagList));
         Meta.FileConfigDTO fileConfig = generatorVO.getFileConfig();
         generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
@@ -146,7 +146,7 @@ public class GeneratorVO implements Serializable {
         }
         GeneratorVO generatorVO = new GeneratorVO();
         BeanUtils.copyProperties(generator, generatorVO);
-        generatorVO.setTagList(JSONUtil.toList(generator.getTags(), String.class));
+        generatorVO.setTags(JSONUtil.toList(generator.getTags(), String.class));
         generatorVO.setModelConfig(JSONUtil.toBean(generator.getModelConfig(), Meta.ModelConfigDTO.class));
         generatorVO.setFileConfig(JSONUtil.toBean(generator.getFileConfig(), Meta.FileConfigDTO.class));
         return generatorVO;

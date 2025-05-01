@@ -40,6 +40,10 @@ export const requestConfig: RequestConfig = {
       if (!data) {
         throw new Error('服务异常');
       }
+      // 如果是下载接口，不进行拦截
+      if(requestPath.includes('download')) {
+        return response;
+      }
 
       // 错误码处理
       const code: number = data.code;

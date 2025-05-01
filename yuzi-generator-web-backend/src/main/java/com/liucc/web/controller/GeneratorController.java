@@ -1,5 +1,6 @@
 package com.liucc.web.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.liucc.web.annotation.AuthCheck;
@@ -10,6 +11,7 @@ import com.liucc.web.common.ResultUtils;
 import com.liucc.web.constant.UserConstant;
 import com.liucc.web.exception.BusinessException;
 import com.liucc.web.exception.ThrowUtils;
+import com.liucc.web.manager.CosManager;
 import com.liucc.web.model.dto.generator.GeneratorAddRequest;
 import com.liucc.web.model.dto.generator.GeneratorEditRequest;
 import com.liucc.web.model.dto.generator.GeneratorQueryRequest;
@@ -19,12 +21,17 @@ import com.liucc.web.model.entity.User;
 import com.liucc.web.model.vo.GeneratorVO;
 import com.liucc.web.service.GeneratorService;
 import com.liucc.web.service.UserService;
+import com.qcloud.cos.model.COSObject;
+import com.qcloud.cos.utils.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -44,7 +51,58 @@ public class GeneratorController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private CosManager cosManager;
+
     // region 增删改查
+
+    @GetMapping("/download")
+    public void download(Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 参数合法性校验
+        if (id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        if (BeanUtil.isEmpty(loginUser)){
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        // 获取对应的generator
+        Generator generator = generatorService.getById(id);
+        if (BeanUtil.isEmpty(generator)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 获取产物包路径(相对)
+        String filePath = generator.getDistPath();
+        // 追踪事件
+        log.info("用户 {} 下载了 {}", loginUser, generator);
+
+
+        // 获取文件输入流
+        InputStream cosObjectInput = null;
+        // 获取文件对象
+        COSObject cosObject = cosManager.getObject(filePath);
+        try {
+            // 获取文件内容
+            cosObjectInput = cosObject.getObjectContent();
+            // 处理下载到的流
+            // 这里是直接读取，按实际情况来处理
+            byte[] bytes = null;
+            bytes = IOUtils.toByteArray(cosObjectInput);
+            // 设置响应头
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment; filename=" + filePath);
+            response.setContentLength(bytes.length);
+            // 将文件内容写入响应流
+            response.getOutputStream().write(bytes);
+            response.getOutputStream().flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cosObjectInput != null) {
+                cosObjectInput.close();
+            }
+        }
+    }
 
     /**
      * 创建

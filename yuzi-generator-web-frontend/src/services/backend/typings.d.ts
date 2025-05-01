@@ -69,6 +69,11 @@ declare namespace API {
     id?: number;
   };
 
+  type downloadUsingGETParams = {
+    /** id */
+    id?: number;
+  };
+
   type FileConfigDTO = {
     files?: FileInfo[];
     inputRootPath?: string;
@@ -197,7 +202,7 @@ declare namespace API {
     picture?: string;
     searchText?: string;
     status?: number;
-    tagList?: string[];
+    tags?: string[];
     title?: string;
     updateTime?: string;
     user?: UserVO;
