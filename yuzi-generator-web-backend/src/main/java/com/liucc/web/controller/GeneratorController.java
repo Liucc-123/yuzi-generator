@@ -1,6 +1,9 @@
 package com.liucc.web.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.liucc.web.annotation.AuthCheck;
@@ -12,10 +15,7 @@ import com.liucc.web.constant.UserConstant;
 import com.liucc.web.exception.BusinessException;
 import com.liucc.web.exception.ThrowUtils;
 import com.liucc.web.manager.CosManager;
-import com.liucc.web.model.dto.generator.GeneratorAddRequest;
-import com.liucc.web.model.dto.generator.GeneratorEditRequest;
-import com.liucc.web.model.dto.generator.GeneratorQueryRequest;
-import com.liucc.web.model.dto.generator.GeneratorUpdateRequest;
+import com.liucc.web.model.dto.generator.*;
 import com.liucc.web.model.entity.Generator;
 import com.liucc.web.model.entity.User;
 import com.liucc.web.model.vo.GeneratorVO;
@@ -24,18 +24,18 @@ import com.liucc.web.service.UserService;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.utils.IOUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.CharSet;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 
 /**
- * 帖子接口
+ * 生成器接口
  *
  * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
  * @from <a href="https://liucc.icu">编程导航知识星球</a>
@@ -56,6 +56,30 @@ public class GeneratorController {
 
     // region 增删改查
 
+    @PostMapping("/use")
+    public void useGenerator(@RequestBody GeneratorUseRequest generatorUseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        // 参数合法性校验
+        Long id = generatorUseRequest.getId();
+        if (id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        if (BeanUtil.isEmpty(loginUser)) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        // 追踪事件
+        log.info("用户 {} 下载了id 为{} 的生成器", loginUser, id);
+
+        String ProjectPath = System.getProperty("user.dir");
+        // 独立工作空间
+        String tempDirPath = String.format("%s/.temp/use/%s", ProjectPath, id);
+        File generatedZip = generatorService.useGenerator(generatorUseRequest, tempDirPath);
+        FileUtil.writeToStream(generatedZip, response.getOutputStream());
+        // 最后清理临时文件
+        FileUtil.del(tempDirPath);
+    }
+
     @GetMapping("/download")
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 参数合法性校验
@@ -63,7 +87,7 @@ public class GeneratorController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User loginUser = userService.getLoginUser(request);
-        if (BeanUtil.isEmpty(loginUser)){
+        if (BeanUtil.isEmpty(loginUser)) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
         // 获取对应的generator
@@ -227,7 +251,7 @@ public class GeneratorController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<GeneratorVO>> listGeneratorVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
-                                                            HttpServletRequest request) {
+                                                                 HttpServletRequest request) {
         long current = generatorQueryRequest.getCurrent();
         long size = generatorQueryRequest.getPageSize();
         // 限制爬虫
@@ -246,7 +270,7 @@ public class GeneratorController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<GeneratorVO>> listMyGeneratorVOByPage(@RequestBody GeneratorQueryRequest generatorQueryRequest,
-                                                              HttpServletRequest request) {
+                                                                   HttpServletRequest request) {
         if (generatorQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

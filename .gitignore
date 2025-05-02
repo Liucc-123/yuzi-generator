@@ -1,4 +1,6 @@
 ### Custom template
+application-local.yml
+yuzi-generator-web-backend/src/main/resources/application-local.yml
 .idea
 target
 yuzi-generator.iml
@@ -6,7 +8,8 @@ yuzi-generator.iml
 # 忽略generated 目录
 generated
 .temp
-application-local.yml
+
+
 
 ### Java template
 # Compiled class file

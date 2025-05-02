@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.liucc.web.model.dto.generator.GeneratorQueryRequest;
+import com.liucc.web.model.dto.generator.GeneratorUseRequest;
 import com.liucc.web.model.entity.Generator;
 import com.liucc.web.model.vo.GeneratorVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 /**
  * 帖子服务
@@ -51,4 +53,13 @@ public interface GeneratorService extends IService<Generator> {
      * @return
      */
     Page<GeneratorVO> getGeneratorVOPage(Page<Generator> generatorPage, HttpServletRequest request);
+
+    /**
+     * 在线使用生成器
+     *
+     * @param generatorUseRequest
+     * @param workspace 独立工作空间
+     * @return 压缩后的生成代码
+     */
+    File useGenerator(GeneratorUseRequest generatorUseRequest, String workspace);
 }

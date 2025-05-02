@@ -1,6 +1,11 @@
 package com.liucc.web.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,8 +13,10 @@ import com.liucc.web.common.ErrorCode;
 import com.liucc.web.constant.CommonConstant;
 import com.liucc.web.exception.BusinessException;
 import com.liucc.web.exception.ThrowUtils;
+import com.liucc.web.manager.CosManager;
 import com.liucc.web.mapper.GeneratorMapper;
 import com.liucc.web.model.dto.generator.GeneratorQueryRequest;
+import com.liucc.web.model.dto.generator.GeneratorUseRequest;
 import com.liucc.web.model.entity.Generator;
 import com.liucc.web.model.entity.User;
 import com.liucc.web.model.vo.GeneratorVO;
@@ -24,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +49,8 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
 
     @Resource
     private UserService userService;
+    @Resource
+    private CosManager cosManager;
 
     @Override
     public void validGenerator(Generator generator, boolean add) {
@@ -142,6 +152,68 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         }).collect(Collectors.toList());
         generatorVOPage.setRecords(generatorVOList);
         return generatorVOPage;
+    }
+
+    @Override
+    public File useGenerator(GeneratorUseRequest generatorUseRequest, String tempDirPath) {
+        // 1、获取id对应的 生成器
+        Long id = generatorUseRequest.getId();
+        Generator generator = getById(id);
+        if (BeanUtil.isEmpty(generator)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 2、下载生成器到指定本地文件
+        // 使用固定压缩名
+        String zipPath = tempDirPath+ "/dist.zip";
+        if (!FileUtil.exist(zipPath)){
+            FileUtil.touch(zipPath);
+        }
+        try {
+            cosManager.download(generator.getDistPath(), zipPath);
+        } catch (InterruptedException e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "下载失败");
+        }
+        // 3、解压文件，得到代码生成器项目
+        File unzipDirFile = ZipUtil.unzip(zipPath);
+        // 4、将用户填写的数据，写入到指定 json 文件
+        String dataModelJsonPath = tempDirPath + File.separator + "dataModel.json";
+        FileUtil.touch(dataModelJsonPath);
+        FileUtil.writeUtf8String(JSONUtil.toJsonStr(generatorUseRequest.getDataModel()), dataModelJsonPath);
+        // 5、执行脚本
+        // 创建一个 ProcessBuilder 实例
+        // 给脚本文件添加可执行权限
+        List<File> files = FileUtil.loopFiles(unzipDirFile);
+        File scriptFile = files.stream()
+                .filter(file -> FileUtil.isFile(file) && StrUtil.equals(file.getName(), "generator"))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(ErrorCode.SYSTEM_ERROR, "脚本文件不存在"));
+        scriptFile.setExecutable(true);
+        String absoluteScriptPath  = scriptFile.getAbsolutePath();
+        String[] commands = new String[]{"sh", absoluteScriptPath, "json-generate", "--file=" + dataModelJsonPath};
+        ProcessBuilder processBuilder = new ProcessBuilder(commands);
+
+        // 设置工作目录
+        processBuilder.directory(unzipDirFile);
+        // 启动进程
+        Process process = null;
+        try {
+            process = processBuilder.start();
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            // 等待进程完成
+            int exitCode = process.waitFor();
+            System.out.println("脚本执行完成，退出码：" + exitCode);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "脚本执行失败");
+        }
+        // 将生成的代码压缩，返回给前端
+        String generatedDir = unzipDirFile + File.separator + "generated";
+        File generatedZip = ZipUtil.zip(generatedDir);
+        return generatedZip;
     }
 
 }
