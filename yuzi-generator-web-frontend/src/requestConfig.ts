@@ -41,7 +41,7 @@ export const requestConfig: RequestConfig = {
         throw new Error('服务异常');
       }
       // 如果是下载接口，不进行拦截
-      if(requestPath.includes('download')) {
+      if(response.data instanceof Blob) {
         return response;
       }
 

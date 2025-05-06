@@ -15,6 +15,7 @@ import com.liucc.web.constant.UserConstant;
 import com.liucc.web.exception.BusinessException;
 import com.liucc.web.exception.ThrowUtils;
 import com.liucc.web.manager.CosManager;
+import com.liucc.web.meta.Meta;
 import com.liucc.web.model.dto.generator.*;
 import com.liucc.web.model.entity.Generator;
 import com.liucc.web.model.entity.User;
@@ -69,7 +70,7 @@ public class GeneratorController {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
         // 追踪事件
-        log.info("用户 {} 下载了id 为{} 的生成器", loginUser, id);
+        log.info("生成器 {} 下载了id 为{} 的生成器", loginUser, id);
 
         String ProjectPath = System.getProperty("user.dir");
         // 独立工作空间
@@ -98,7 +99,7 @@ public class GeneratorController {
         // 获取产物包路径(相对)
         String filePath = generator.getDistPath();
         // 追踪事件
-        log.info("用户 {} 下载了 {}", loginUser, generator);
+        log.info("生成器 {} 下载了 {}", loginUser, generator);
 
 
         // 获取文件输入流
@@ -145,6 +146,16 @@ public class GeneratorController {
         List<String> tags = generatorAddRequest.getTags();
         if (tags != null) {
             generator.setTags(JSONUtil.toJsonStr(tags));
+        }
+        // modelConfig
+        Meta.ModelConfigDTO modelConfig = generatorAddRequest.getModelConfig();
+        if(BeanUtil.isNotEmpty(modelConfig)){
+            generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
+        }
+        // fileConfig
+        Meta.FileConfigDTO fileConfig = generatorAddRequest.getFileConfig();
+        if(BeanUtil.isNotEmpty(fileConfig)){
+            generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
         }
         generatorService.validGenerator(generator, true);
         User loginUser = userService.getLoginUser(request);
@@ -262,7 +273,7 @@ public class GeneratorController {
     }
 
     /**
-     * 分页获取当前用户创建的资源列表
+     * 分页获取当前生成器创建的资源列表
      *
      * @param generatorQueryRequest
      * @param request
@@ -286,7 +297,7 @@ public class GeneratorController {
     }
 
     /**
-     * 编辑（用户）
+     * 编辑（生成器）
      *
      * @param generatorEditRequest
      * @param request
@@ -302,6 +313,16 @@ public class GeneratorController {
         List<String> tags = generatorEditRequest.getTags();
         if (tags != null) {
             generator.setTags(JSONUtil.toJsonStr(tags));
+        }
+        // modelConfig
+        Meta.ModelConfigDTO modelConfig = generatorEditRequest.getModelConfig();
+        if(BeanUtil.isNotEmpty(modelConfig)){
+            generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
+        }
+        // fileConfig
+        Meta.FileConfigDTO fileConfig = generatorEditRequest.getFileConfig();
+        if(BeanUtil.isNotEmpty(fileConfig)){
+            generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
         }
         // 参数校验
         generatorService.validGenerator(generator, false);
