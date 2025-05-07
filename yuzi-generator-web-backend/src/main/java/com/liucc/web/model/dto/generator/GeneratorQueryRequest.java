@@ -1,7 +1,7 @@
 package com.liucc.web.model.dto.generator;
 
 import com.liucc.web.common.PageRequest;
-import com.liucc.web.meta.Meta;
+import com.liucc.maker.meta.Meta;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

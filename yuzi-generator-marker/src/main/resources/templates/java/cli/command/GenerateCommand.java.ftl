@@ -29,7 +29,7 @@ public class GenerateCommand implements Callable<Integer> {
     <#if modelInfo.groupKey??>
     static DataModel.${modelInfo.type} ${modelInfo.groupKey} = new DataModel.${modelInfo.type}();
 
-    @CommandLine.Command(name = "${modelInfo.groupKey}", description = "${modelInfo.description}", mixinStandardHelpOptions = true)
+    @CommandLine.Command(name = "${modelInfo.groupKey}", description = "${modelInfo.groupName}", mixinStandardHelpOptions = true)
     @Data
     static class ${modelInfo.type}Command implements Runnable{
     <#list modelInfo.models as subModelInfo>

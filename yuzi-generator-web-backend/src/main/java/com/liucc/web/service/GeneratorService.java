@@ -3,6 +3,7 @@ package com.liucc.web.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.liucc.web.model.dto.generator.GeneratorMakeRequest;
 import com.liucc.web.model.dto.generator.GeneratorQueryRequest;
 import com.liucc.web.model.dto.generator.GeneratorUseRequest;
 import com.liucc.web.model.entity.Generator;
@@ -62,4 +63,13 @@ public interface GeneratorService extends IService<Generator> {
      * @return 压缩后的生成代码
      */
     File useGenerator(GeneratorUseRequest generatorUseRequest, String workspace);
+
+    /**
+     * 制作生成器
+     *
+     * @param generatorMakeRequest 制作生成器请求对象
+     * @param tempDirPath 工作空间
+     * @return 制作好的代码生成器压缩包路径
+     */
+    File makeGenerator(GeneratorMakeRequest generatorMakeRequest, String tempDirPath);
 }

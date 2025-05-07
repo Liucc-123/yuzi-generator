@@ -2,8 +2,7 @@ package com.liucc.web.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.ZipUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.liucc.web.annotation.AuthCheck;
@@ -15,7 +14,7 @@ import com.liucc.web.constant.UserConstant;
 import com.liucc.web.exception.BusinessException;
 import com.liucc.web.exception.ThrowUtils;
 import com.liucc.web.manager.CosManager;
-import com.liucc.web.meta.Meta;
+import com.liucc.maker.meta.Meta;
 import com.liucc.web.model.dto.generator.*;
 import com.liucc.web.model.entity.Generator;
 import com.liucc.web.model.entity.User;
@@ -25,15 +24,17 @@ import com.liucc.web.service.UserService;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.utils.IOUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.CharSet;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 生成器接口
@@ -55,7 +56,37 @@ public class GeneratorController {
     @Resource
     private CosManager cosManager;
 
-    // region 增删改查
+    /**
+     * 在线制作代码生成器
+     *
+     * @param generatorMakeRequest
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @PostMapping("/make")
+    public void makeGenerator(@RequestBody GeneratorMakeRequest generatorMakeRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        // 参数合法性校验
+        // 登录用户
+        User loginUser = userService.getLoginUser(request);
+        if (BeanUtil.isEmpty(loginUser)) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        // 追踪事件
+        log.info("用户 {} 在线制作生成器", loginUser.getId());
+
+        String ProjectPath = System.getProperty("user.dir");
+        // 独立工作空间
+        long id = IdUtil.getSnowflakeNextId();
+        String tempDirPath = String.format("%s/.temp/make/%s", ProjectPath, id);
+        File generatedZip = generatorService.makeGenerator(generatorMakeRequest, tempDirPath);
+        FileUtil.writeToStream(generatedZip, response.getOutputStream());
+        // 最后清理临时文件(异步清理)
+        CompletableFuture.runAsync(() -> {
+            FileUtil.del(tempDirPath);
+        });
+    }
 
     @PostMapping("/use")
     public void useGenerator(@RequestBody GeneratorUseRequest generatorUseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,8 +108,10 @@ public class GeneratorController {
         String tempDirPath = String.format("%s/.temp/use/%s", ProjectPath, id);
         File generatedZip = generatorService.useGenerator(generatorUseRequest, tempDirPath);
         FileUtil.writeToStream(generatedZip, response.getOutputStream());
-        // 最后清理临时文件
-        FileUtil.del(tempDirPath);
+        // 最后清理临时文件(异步清理)
+        CompletableFuture.runAsync(() -> {
+            FileUtil.del(tempDirPath);
+        });
     }
 
     @GetMapping("/download")
@@ -149,12 +182,12 @@ public class GeneratorController {
         }
         // modelConfig
         Meta.ModelConfigDTO modelConfig = generatorAddRequest.getModelConfig();
-        if(BeanUtil.isNotEmpty(modelConfig)){
+        if (BeanUtil.isNotEmpty(modelConfig)) {
             generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
         }
         // fileConfig
         Meta.FileConfigDTO fileConfig = generatorAddRequest.getFileConfig();
-        if(BeanUtil.isNotEmpty(fileConfig)){
+        if (BeanUtil.isNotEmpty(fileConfig)) {
             generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
         }
         generatorService.validGenerator(generator, true);
@@ -316,12 +349,12 @@ public class GeneratorController {
         }
         // modelConfig
         Meta.ModelConfigDTO modelConfig = generatorEditRequest.getModelConfig();
-        if(BeanUtil.isNotEmpty(modelConfig)){
+        if (BeanUtil.isNotEmpty(modelConfig)) {
             generator.setModelConfig(JSONUtil.toJsonStr(modelConfig));
         }
         // fileConfig
         Meta.FileConfigDTO fileConfig = generatorEditRequest.getFileConfig();
-        if(BeanUtil.isNotEmpty(fileConfig)){
+        if (BeanUtil.isNotEmpty(fileConfig)) {
             generator.setFileConfig(JSONUtil.toJsonStr(fileConfig));
         }
         // 参数校验

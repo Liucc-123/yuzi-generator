@@ -9,12 +9,17 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.liucc.maker.generator.main.GeneratorTemplate;
+import com.liucc.maker.generator.main.ZipGenerator;
+import com.liucc.maker.meta.Meta;
+import com.liucc.maker.meta.MetaValidator;
 import com.liucc.web.common.ErrorCode;
 import com.liucc.web.constant.CommonConstant;
 import com.liucc.web.exception.BusinessException;
 import com.liucc.web.exception.ThrowUtils;
 import com.liucc.web.manager.CosManager;
 import com.liucc.web.mapper.GeneratorMapper;
+import com.liucc.web.model.dto.generator.GeneratorMakeRequest;
 import com.liucc.web.model.dto.generator.GeneratorQueryRequest;
 import com.liucc.web.model.dto.generator.GeneratorUseRequest;
 import com.liucc.web.model.entity.Generator;
@@ -24,6 +29,7 @@ import com.liucc.web.model.vo.UserVO;
 import com.liucc.web.service.GeneratorService;
 import com.liucc.web.service.UserService;
 import com.liucc.web.utils.SqlUtils;
+import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -214,6 +220,48 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         String generatedDir = unzipDirFile + File.separator + "generated";
         File generatedZip = ZipUtil.zip(generatedDir);
         return generatedZip;
+    }
+
+    @Override
+    public File makeGenerator(GeneratorMakeRequest generatorMakeRequest, String tempDirPath) {
+        Meta meta = generatorMakeRequest.getMeta();
+        // 原始模板文件
+        String zipFilePath = generatorMakeRequest.getZipFilePath();
+        if (StrUtil.isBlank(zipFilePath)){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "模板文件路径不能为空");
+        }
+        // 1、下载模板文件
+        // 使用固定压缩名
+        String templateZipPath = tempDirPath+ "/template.zip";
+        if (!FileUtil.exist(templateZipPath)){
+            FileUtil.touch(templateZipPath);
+        }
+        try {
+            cosManager.download(zipFilePath, templateZipPath);
+        } catch (InterruptedException e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "");
+        }
+        // 解压缩，得到项目模板文件
+        File unzipDirFile = ZipUtil.unzip(templateZipPath);
+        // 2、构造制作工具所需参数
+        String sourceRootPath = unzipDirFile.getAbsolutePath();
+        meta.getFileConfig().setSourceRootPath(sourceRootPath);
+        // 制作代码生成器的生成位置
+        String outputPath = String.format("%s"+ "/generated/%s", tempDirPath, meta.getName());
+        // 校验和处理默认值
+        MetaValidator.doValidAndFill(meta);
+        // 3、调用 maker 工具，制作代码生成器
+        GeneratorTemplate generatorTemplate = new ZipGenerator();
+        try {
+            generatorTemplate.doGenerate(meta, outputPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "代码生成器制作失败");
+        }
+        // 4、返回代码生成器压缩包（产物包）
+        String suffix = "-dist.zip";
+        String generatedZipPath = outputPath + suffix;
+        return new File(generatedZipPath);
     }
 
 }

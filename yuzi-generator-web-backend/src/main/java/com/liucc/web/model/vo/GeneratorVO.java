@@ -1,7 +1,7 @@
 package com.liucc.web.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.liucc.web.meta.Meta;
+import com.liucc.maker.meta.Meta;
 import com.liucc.web.model.entity.Generator;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;

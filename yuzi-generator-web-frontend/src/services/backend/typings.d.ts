@@ -146,6 +146,11 @@ declare namespace API {
     version?: string;
   };
 
+  type GeneratorMakeRequest = {
+    meta?: Meta;
+    zipFilePath?: string;
+  };
+
   type GeneratorQueryRequest = {
     author?: string;
     basePackage?: string;
@@ -230,6 +235,11 @@ declare namespace API {
     id?: number;
   };
 
+  type Git = {
+    enable?: boolean;
+    gitignore?: string;
+  };
+
   type LoginUserVO = {
     createTime?: string;
     id?: number;
@@ -238,6 +248,18 @@ declare namespace API {
     userName?: string;
     userProfile?: string;
     userRole?: string;
+  };
+
+  type Meta = {
+    author?: string;
+    basePackage?: string;
+    createTime?: string;
+    description?: string;
+    fileConfig?: FileConfigDTO;
+    git?: Git;
+    modelConfig?: ModelConfigDTO;
+    name?: string;
+    version?: string;
   };
 
   type ModelConfigDTO = {

@@ -48,21 +48,20 @@
         "fieldName": "needGit",
         "type": "boolean",
         "description": "是否生成 .gitignore 文件",
-        "defaultValue": false,
+        "defaultValue": "false",
         "abbr": "g"
       },
       {
         "fieldName": "loop",
         "type": "boolean",
         "description": "是否生成循环",
-        "defaultValue": false,
+        "defaultValue": "false",
         "abbr": "l"
       },
       {
         "groupKey": "mainTemplate",
         "groupName": "核心模板",
         "type": "MainTemplate",
-        "description": "用于生成核心模板文件",
         "condition": "loop",
         "models": [
           {

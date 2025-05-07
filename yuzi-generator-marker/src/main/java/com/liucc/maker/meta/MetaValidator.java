@@ -3,6 +3,7 @@ package com.liucc.maker.meta;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.liucc.maker.meta.enums.FileGenerateTypeEnum;
 import com.liucc.maker.meta.enums.FileTypeEnum;
@@ -55,6 +56,16 @@ public class MetaValidator {
             String modelInfoType = modelInfo.getType();
             if (StrUtil.isEmpty(modelInfoType)) {
                 modelInfo.setType(ModelFiledTypeEnum.STRING.getType());
+            }
+            // "false" -> fasle
+            String defaultValueStr = "";
+            Object defaultValue = modelInfo.getDefaultValue();
+            if (defaultValue instanceof String) {
+                defaultValueStr = (String) defaultValue;
+            }
+            if (StrUtil.equals("boolean", modelInfoType) ||
+                    StrUtil.containsAny(defaultValueStr, "true", "false")) {
+                modelInfo.setDefaultValue(BooleanUtil.toBooleanObject(defaultValueStr));
             }
         }
     }

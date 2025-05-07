@@ -14,10 +14,17 @@ import java.io.File;
 import java.io.IOException;
 
 public abstract class GeneratorTemplate  {
-    public void doGenerate() throws TemplateException, IOException, InterruptedException  {
-        Meta meta = MetaManager.getMetaObject();
-        String projectPath = System.getProperty("user.dir");
-        String outputPath = projectPath + File.separator + "generated" + File.separator +meta.getName();// 生成目标项目的路径
+
+    /**
+     * 制作代码生成器
+     *
+     * @param meta 元信息
+     * @param outputPath 输出位置
+     * @throws TemplateException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void doGenerate(Meta meta, String outputPath) throws TemplateException, IOException, InterruptedException  {
         // 路径不存在，则创建
         if (!FileUtil.exist(outputPath)) {
             FileUtil.mkdir(outputPath);
@@ -35,6 +42,14 @@ public abstract class GeneratorTemplate  {
         // 6、生成精简版代码生成器
         generateDist(sourceCopyDestPath, outputPath, jarPath);
     }
+
+    public void doGenerate() throws TemplateException, IOException, InterruptedException  {
+        Meta meta = MetaManager.getMetaObject();
+        String projectPath = System.getProperty("user.dir");
+        String outputPath = projectPath + File.separator + "generated" + File.separator +meta.getName();// 生成目标项目的路径
+        doGenerate(meta, outputPath);
+    }
+
 
     /**
      * 生成精简版产物包
@@ -91,9 +106,7 @@ public abstract class GeneratorTemplate  {
     }
 
     protected void generateCode(Meta meta, String outputPath) throws IOException, TemplateException {
-        // 获取 resources 目录
-        ClassPathResource classPathResource = new ClassPathResource("");
-        String inputResourcePath = classPathResource.getAbsolutePath();
+        String inputResourcePath = "";
 
         // Java包基础路径
         // com.liucc
