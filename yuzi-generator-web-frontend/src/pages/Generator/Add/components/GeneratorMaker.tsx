@@ -24,6 +24,7 @@ export default (props: Props) => {
     // 校验
     if (!meta.name) {
       message.error('请填写名称');
+      
       return;
     }
 
