@@ -1,14 +1,13 @@
 package com.liucc.web.manager;
 
+import cn.hutool.core.collection.CollUtil;
 import com.liucc.web.config.CosClientConfig;
 import com.qcloud.cos.COSClient;
-import com.qcloud.cos.model.COSObject;
-import com.qcloud.cos.model.GetObjectRequest;
-import com.qcloud.cos.model.PutObjectRequest;
-import com.qcloud.cos.model.PutObjectResult;
+import com.qcloud.cos.model.*;
 import com.qcloud.cos.transfer.Download;
 import com.qcloud.cos.transfer.TransferManager;
 import com.qcloud.cos.utils.IOUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +15,8 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,6 +27,7 @@ import java.util.concurrent.Executors;
  * @from <a href="https://github.com/dashboard">tiga</a>
  */
 @Component
+@Slf4j
 public class CosManager {
 
     @Resource
@@ -47,7 +49,8 @@ public class CosManager {
 
     /**
      * 下载对象到本地文件
-     * @param key 下载对象相对路径
+     *
+     * @param key           下载对象相对路径
      * @param localFilepath 本地文件路径
      * @return
      */
@@ -97,4 +100,71 @@ public class CosManager {
         COSObject cosObject = cosClient.getObject(getObjectRequest);
         return cosObject;
     }
+
+    /**
+     * 删除单个对象
+     *
+     * @param key
+     */
+    public void deletebject(String key) {
+        cosClient.deleteObject(cosClientConfig.getBucket(), key);
+    }
+
+    /**
+     * 批量删除对象
+     *
+     * @param keys key不能以 / 或者 \ 开头
+     */
+    public void deleteObjects(List<String> keys) {
+
+        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(cosClientConfig.getBucket());
+        // 设置要删除的key列表, 最多一次删除1000个
+        ArrayList<DeleteObjectsRequest.KeyVersion> keyList = new ArrayList<>();
+        // 传入要删除的文件名
+        // 注意文件名不允许以正斜线/或者反斜线\开头，例如：
+        // 存储桶目录下有a/b/c.txt文件，如果要删除，只能是 keyList.add(new KeyVersion("a/b/c.txt")),
+        // 若使用 keyList.add(new KeyVersion("/a/b/c.txt"))会导致删除不成功
+        for (String key : keys) {
+            keyList.add(new DeleteObjectsRequest.KeyVersion(key));
+        }
+        deleteObjectsRequest.setKeys(keyList);
+        DeleteObjectsResult deleteObjectsResult = cosClient.deleteObjects(deleteObjectsRequest);
+        List<DeleteObjectsResult.DeletedObject> deletedObjects = deleteObjectsResult.getDeletedObjects();
+        log.info("deletedObjects:{}", deletedObjects);
+    }
+
+    /**
+     * 删除目录
+     *
+     * @param delPrefix 删除目录前缀 一定要带上后缀。正确：/test/，错误：/test
+     *                  /test会把所有以 test 开头的文件全部删除
+     */
+    public void deleteDir(String delPrefix) {
+        ListObjectsRequest listObjectsRequest = new ListObjectsRequest();
+        listObjectsRequest.setBucketName(cosClientConfig.getBucket());
+        listObjectsRequest.setPrefix(delPrefix);
+        listObjectsRequest.setMaxKeys(1000);
+        ObjectListing objectListing = null;
+        // 删除请求对象
+        DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(cosClientConfig.getBucket());
+
+        do {
+            objectListing = cosClient.listObjects(listObjectsRequest);
+            List<COSObjectSummary> objectSummaries = objectListing.getObjectSummaries();
+            if (CollUtil.isEmpty(objectSummaries)) {
+                break;
+            }
+            for (COSObjectSummary objectSummary : objectSummaries) {
+                // 待删除的对象集合  重置
+                List<DeleteObjectsRequest.KeyVersion> toDeleteKeyList = new ArrayList<>();
+                toDeleteKeyList.add(new DeleteObjectsRequest.KeyVersion(objectSummary.getKey()));
+                deleteObjectsRequest.setKeys(toDeleteKeyList);
+                // 批量删除指定目录下的所有对象
+                cosClient.deleteObjects(deleteObjectsRequest);
+            }
+            String nextMarker = listObjectsRequest.getMarker();
+            listObjectsRequest.setMarker(nextMarker);
+        } while (objectListing.isTruncated());
+    }
+
 }
