@@ -1,6 +1,6 @@
 # Docker 镜像构建
-# @author <a href="https://github.com/liliucc">程序员鱼皮</a>
-# @from <a href="https://liucc.icu">编程导航知识星球</a>
+# @author liucc
+# @from <a href="https://github.com/dashboard">tiga</a>
 FROM maven:3.8.1-jdk-8-slim as builder
 
 # Copy local code to the container image.

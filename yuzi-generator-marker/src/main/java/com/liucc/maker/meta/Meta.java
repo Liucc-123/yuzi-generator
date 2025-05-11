@@ -3,6 +3,7 @@ package com.liucc.maker.meta;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 @NoArgsConstructor
 @Data
-public class Meta {
+public class Meta implements Serializable{
 
     private String name;
     private String description;
@@ -31,7 +32,7 @@ public class Meta {
 
     @NoArgsConstructor
     @Data
-    public static class FileConfigDTO {
+    public static class FileConfigDTO implements Serializable {
         private String inputRootPath;
         private String outputRootPath;
         private String sourceRootPath; // 源模板项目路径
@@ -40,7 +41,7 @@ public class Meta {
 
         @NoArgsConstructor
         @Data
-        public static class FileInfo {
+        public static class FileInfo implements Serializable{
             private String inputPath;
             private String outputPath;
             private String type;

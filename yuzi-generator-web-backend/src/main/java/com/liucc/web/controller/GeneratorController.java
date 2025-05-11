@@ -1,9 +1,13 @@
 package com.liucc.web.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,6 +19,7 @@ import com.liucc.web.common.ResultUtils;
 import com.liucc.web.constant.UserConstant;
 import com.liucc.web.exception.BusinessException;
 import com.liucc.web.exception.ThrowUtils;
+import com.liucc.web.manager.CacheManager;
 import com.liucc.web.manager.CosManager;
 import com.liucc.maker.meta.Meta;
 import com.liucc.web.model.dto.generator.*;
@@ -28,6 +33,8 @@ import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.utils.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -36,14 +43,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 生成器接口
  *
- * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
- * @from <a href="https://liucc.icu">编程导航知识星球</a>
+ * @author liucc
+ * @from <a href="https://github.com/dashboard">tiga</a>
  */
 @RestController
 @RequestMapping("/generator")
@@ -58,6 +67,9 @@ public class GeneratorController {
 
     @Resource
     private CosManager cosManager;
+
+    @Resource
+    private CacheManager cacheManager;
 
     /**
      * 在线制作代码生成器
@@ -335,6 +347,12 @@ public class GeneratorController {
         long size = generatorQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        // 缓存中是否存在
+        Object cacheValue = cacheManager.get(getPageCacheKey(generatorQueryRequest));
+        if (ObjectUtil.isNotEmpty(cacheValue)) {
+            Page<GeneratorVO> result = (Page<GeneratorVO>)cacheValue;
+            return ResultUtils.success(result);
+        }
         QueryWrapper<Generator> queryWrapper = generatorService.getQueryWrapper(generatorQueryRequest);
         queryWrapper.select("id",
                 "name",
@@ -354,7 +372,21 @@ public class GeneratorController {
             record.setFileConfig(null);
         });
         generatorVOPage.setRecords(records);
+        // 设置缓存
+        cacheManager.put(getPageCacheKey(generatorQueryRequest), generatorVOPage);
         return ResultUtils.success(generatorVOPage);
+    }
+
+    /**
+     * 获取缓存 key（业务:数据:请求参数）
+     *
+     * @param request
+     * @return
+     */
+    private static String getPageCacheKey(GeneratorQueryRequest request){
+        String jsonStr = JSONUtil.toJsonStr(request);
+        String encode = Base64Encoder.encode(jsonStr);
+        return "generator:page:" + encode;
     }
 
     /**

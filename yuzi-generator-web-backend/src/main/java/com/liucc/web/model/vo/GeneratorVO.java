@@ -13,8 +13,8 @@ import java.util.List;
 /**
  * 帖子视图
  *
- * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
- * @from <a href="https://liucc.icu">编程导航知识星球</a>
+ * @author liucc
+ * @from <a href="https://github.com/dashboard">tiga</a>
  */
 @Data
 public class GeneratorVO implements Serializable {
@@ -112,6 +112,8 @@ public class GeneratorVO implements Serializable {
      * 创建人信息
      */
     private UserVO user;
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 包装类转对象

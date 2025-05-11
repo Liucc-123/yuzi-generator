@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 /**
  * 用户角色枚举
  *
- * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
- * @from <a href="https://liucc.icu">编程导航知识星球</a>
+ * @author liucc
+ * @from <a href="https://github.com/dashboard">tiga</a>
  */
 public enum UserRoleEnum {
 

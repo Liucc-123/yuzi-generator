@@ -7,8 +7,8 @@ import java.io.Serializable;
 /**
  * 用户登录请求
  *
- * @author <a href="https://github.com/liliucc">程序员鱼皮</a>
- * @from <a href="https://liucc.icu">编程导航知识星球</a>
+ * @author liucc
+ * @from <a href="https://github.com/dashboard">tiga</a>
  */
 @Data
 public class UserLoginRequest implements Serializable {
