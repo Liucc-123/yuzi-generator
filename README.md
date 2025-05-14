@@ -87,7 +87,8 @@
 
 核心原理：
 
-<img width="982" alt="image" src="https://github.com/user-attachments/assets/5a306f3f-0a6d-4fd4-842d-28cdd128fec3" />
+<img width="978" alt="image" src="https://github.com/user-attachments/assets/49c8e5bf-62fd-455f-8642-689a5ac41fd2" />
+
 
 
 开发者基于原始代码文件，通过模板制作工具快速生成动态模板 FTL 文件和元信息配置文件meta.json；
